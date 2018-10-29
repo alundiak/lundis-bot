@@ -1,0 +1,818 @@
+{
+  "luis_schema_version": "3.1.0",
+  "versionId": "0.1",
+  "name": "lundis-app",
+  "desc": "LUIS-app for LUIS-based bot",
+  "culture": "en-us",
+  "intents": [
+    {
+      "name": "birthday"
+    },
+    {
+      "name": "Communication.SendMessage",
+      "inherits": {
+        "domain_name": "Communication",
+        "model_name": "SendMessage"
+      }
+    },
+    {
+      "name": "None"
+    },
+    {
+      "name": "Reminder.Change",
+      "inherits": {
+        "domain_name": "Reminder",
+        "model_name": "Change"
+      }
+    },
+    {
+      "name": "Reminder.Create",
+      "inherits": {
+        "domain_name": "Reminder",
+        "model_name": "Create"
+      }
+    },
+    {
+      "name": "Reminder.Delete",
+      "inherits": {
+        "domain_name": "Reminder",
+        "model_name": "Delete"
+      }
+    },
+    {
+      "name": "Reminder.Find",
+      "inherits": {
+        "domain_name": "Reminder",
+        "model_name": "Find"
+      }
+    }
+  ],
+  "entities": [
+    {
+      "name": "Communication.Message",
+      "inherits": {
+        "domain_name": "Communication",
+        "model_name": "Message"
+      },
+      "roles": []
+    },
+    {
+      "name": "Communication.MessageType",
+      "inherits": {
+        "domain_name": "Communication",
+        "model_name": "MessageType"
+      },
+      "roles": []
+    },
+    {
+      "name": "Contact",
+      "roles": []
+    },
+    {
+      "name": "Contacts",
+      "roles": []
+    }
+  ],
+  "composites": [],
+  "closedLists": [
+    {
+      "name": "Month",
+      "subLists": [],
+      "roles": []
+    }
+  ],
+  "patternAnyEntities": [
+    {
+      "name": "userName",
+      "explicitList": [],
+      "roles": []
+    }
+  ],
+  "regex_entities": [],
+  "prebuiltEntities": [],
+  "model_features": [
+    {
+      "name": "birthdayList",
+      "mode": false,
+      "words": "where were you born?,when is your birthday?,what would you like for birthday present?",
+      "activated": true
+    }
+  ],
+  "regex_features": [],
+  "patterns": [
+    {
+      "pattern": "when {Contact}'s birthday?",
+      "intent": "birthday"
+    },
+    {
+      "pattern": "where were {userName} born?",
+      "intent": "birthday"
+    },
+    {
+      "pattern": "show {Contacts} birthday list",
+      "intent": "birthday"
+    }
+  ],
+  "utterances": [
+    {
+      "text": "\" can you read me my last text , please ? \"",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 26,
+          "endPos": 29
+        }
+      ]
+    },
+    {
+      "text": "11 : 15 am tomorrow reminder",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "a reminder to recall calling carlos",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "add reminder for marry ' s party friday evening at 8",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "answer text from mom",
+      "intent": "Communication.SendMessage",
+      "entities": []
+    },
+    {
+      "text": "bd",
+      "intent": "birthday",
+      "entities": []
+    },
+    {
+      "text": "birth day",
+      "intent": "birthday",
+      "entities": []
+    },
+    {
+      "text": "birthday",
+      "intent": "birthday",
+      "entities": []
+    },
+    {
+      "text": "can you change my reminder",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "can you find the reminder that jack turns twenty",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "can you please resend my last text message ?",
+      "intent": "Communication.SendMessage",
+      "entities": []
+    },
+    {
+      "text": "can you read me the last email that came into the live downtown miami account august eleven",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 25,
+          "endPos": 29
+        }
+      ]
+    },
+    {
+      "text": "can you read my email from berry chris",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 16,
+          "endPos": 20
+        }
+      ]
+    },
+    {
+      "text": "cancel reminder for iced tea",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "change reminder",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "change reminder time",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "compose email to david with subject hey",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 36,
+          "endPos": 38
+        }
+      ]
+    },
+    {
+      "text": "create reminder",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "day of birth",
+      "intent": "birthday",
+      "entities": []
+    },
+    {
+      "text": "delete doctor ' s appointment on tuesday",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "delete meeting reminders",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "delete reminder for class",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "delete reminder twenty eight",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "delete surprise party reminder",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "display dog groomer reminder",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "don ' t remind me anymore to give johnny his antibiotic",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "email robert hello",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 13,
+          "endPos": 17
+        }
+      ]
+    },
+    {
+      "text": "extend reminder",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "facebook candy bell",
+      "intent": "Communication.SendMessage",
+      "entities": []
+    },
+    {
+      "text": "find today ' s reminders",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "how do i erase reminders ?",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "i would like you to text that i will call later",
+      "intent": "Communication.SendMessage",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 30,
+          "endPos": 46
+        }
+      ]
+    },
+    {
+      "text": "is nora available ?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 0,
+          "endPos": 18
+        }
+      ]
+    },
+    {
+      "text": "locate meeting with maria this week for me",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "mark all email messages as read",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 9,
+          "endPos": 13
+        }
+      ]
+    },
+    {
+      "text": "modify my reminder",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "open other reminders",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "open work reminder",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "please give me the one before",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 0,
+          "endPos": 28
+        }
+      ]
+    },
+    {
+      "text": "please let them know i am driving and that this is an auto response",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 21,
+          "endPos": 66
+        }
+      ]
+    },
+    {
+      "text": "please read my latest text from james",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 22,
+          "endPos": 25
+        }
+      ]
+    },
+    {
+      "text": "please read my recent emails",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 22,
+          "endPos": 27
+        }
+      ]
+    },
+    {
+      "text": "please tell patrick he ' s a bad pool player",
+      "intent": "Communication.SendMessage",
+      "entities": []
+    },
+    {
+      "text": "postpone my eight thirty reminder to nine thirty",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "put to sleep reminder to cut grass on thursday",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "read last fujitsu ' s email",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 10,
+          "endPos": 16
+        },
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 22,
+          "endPos": 26
+        }
+      ]
+    },
+    {
+      "text": "read latest nokia email",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 18,
+          "endPos": 22
+        }
+      ]
+    },
+    {
+      "text": "read loud email",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 10,
+          "endPos": 14
+        }
+      ]
+    },
+    {
+      "text": "read miranda ' s text",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 17,
+          "endPos": 20
+        }
+      ]
+    },
+    {
+      "text": "read mum ' s text",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 13,
+          "endPos": 16
+        }
+      ]
+    },
+    {
+      "text": "read my most recent email",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 20,
+          "endPos": 24
+        }
+      ]
+    },
+    {
+      "text": "read my new text message",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 12,
+          "endPos": 15
+        }
+      ]
+    },
+    {
+      "text": "read my unopened sms",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 17,
+          "endPos": 19
+        }
+      ]
+    },
+    {
+      "text": "read new text messages",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 9,
+          "endPos": 12
+        }
+      ]
+    },
+    {
+      "text": "read recent emails",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 12,
+          "endPos": 17
+        }
+      ]
+    },
+    {
+      "text": "read text from mum",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 5,
+          "endPos": 8
+        }
+      ]
+    },
+    {
+      "text": "read text from wife",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 5,
+          "endPos": 8
+        }
+      ]
+    },
+    {
+      "text": "read texts from kyla jack",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 5,
+          "endPos": 9
+        }
+      ]
+    },
+    {
+      "text": "remember fragrances",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "remember poltergeist",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "remember to run errands",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "remember tomorrow",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "remind me about tuesday ' s bake sale at 9 instead of 11",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "remind me to listen to imagine dragons",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "reminder to call henry",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "remove my reminder for the grocery shopping this friday",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "reply martha with please call me i am driving",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 18,
+          "endPos": 44
+        }
+      ]
+    },
+    {
+      "text": "reply suzzane mama wants you",
+      "intent": "Communication.SendMessage",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 14,
+          "endPos": 27
+        }
+      ]
+    },
+    {
+      "text": "reply text",
+      "intent": "Communication.SendMessage",
+      "entities": [
+        {
+          "entity": "Communication.MessageType",
+          "startPos": 6,
+          "endPos": 9
+        }
+      ]
+    },
+    {
+      "text": "reset reminder",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "search for the massage reminder",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "send a text message that i am driving",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 25,
+          "endPos": 36
+        }
+      ]
+    },
+    {
+      "text": "send an email to gigi greg apress . net hi",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 40,
+          "endPos": 41
+        }
+      ]
+    },
+    {
+      "text": "send text saying i am busy",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 17,
+          "endPos": 25
+        }
+      ]
+    },
+    {
+      "text": "send wife a message i love u",
+      "intent": "Communication.SendMessage",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 20,
+          "endPos": 27
+        }
+      ]
+    },
+    {
+      "text": "set a reminder for may twenty fifth",
+      "intent": "Reminder.Create",
+      "entities": []
+    },
+    {
+      "text": "show me the reminders",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "take me to tennessee",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 0,
+          "endPos": 19
+        }
+      ]
+    },
+    {
+      "text": "tell caller i ' ll call them back",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 12,
+          "endPos": 32
+        }
+      ]
+    },
+    {
+      "text": "tell max i ' m running late on viber",
+      "intent": "Communication.SendMessage",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 9,
+          "endPos": 26
+        }
+      ]
+    },
+    {
+      "text": "text 342 - 990 - 6232 let ' s meet tomorrow",
+      "intent": "Communication.SendMessage",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 22,
+          "endPos": 42
+        }
+      ]
+    },
+    {
+      "text": "text 426574 at 12 : 12",
+      "intent": "Communication.SendMessage",
+      "entities": []
+    },
+    {
+      "text": "text caller stating i am busy",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 20,
+          "endPos": 28
+        }
+      ]
+    },
+    {
+      "text": "text carolina test",
+      "intent": "Communication.SendMessage",
+      "entities": []
+    },
+    {
+      "text": "text jeff carlos in twenty minutes",
+      "intent": "Communication.SendMessage",
+      "entities": []
+    },
+    {
+      "text": "text martin kelly",
+      "intent": "Communication.SendMessage",
+      "entities": []
+    },
+    {
+      "text": "text paul don ' t worry i won ' t",
+      "intent": "Communication.SendMessage",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 10,
+          "endPos": 32
+        }
+      ]
+    },
+    {
+      "text": "undo fold laundry reminder",
+      "intent": "Reminder.Delete",
+      "entities": []
+    },
+    {
+      "text": "update reminder for courthouse",
+      "intent": "Reminder.Change",
+      "entities": []
+    },
+    {
+      "text": "what reminders do i have tomorrow ?",
+      "intent": "Reminder.Find",
+      "entities": []
+    },
+    {
+      "text": "whatsapp manuel greg hello",
+      "intent": "Communication.SendMessage",
+      "entities": [
+        {
+          "entity": "Communication.Message",
+          "startPos": 21,
+          "endPos": 25
+        }
+      ]
+    },
+    {
+      "text": "where were you born?",
+      "intent": "birthday",
+      "entities": []
+    }
+  ],
+  "settings": []
+}
