@@ -1,24 +1,17 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
+//
+// Main bot dialog entry point for handling activity types
+//
 
-// bot.js is your main bot dialog entry point for handilng activity types
-
-// Import required Bot Builder
-const { ActivityTypes, CardFactory } = require('botbuilder');
+const { ActivityTypes/*, CardFactory*/ } = require('botbuilder');
 const { LuisRecognizer } = require('botbuilder-ai');
 const { DialogSet, DialogTurnStatus } = require('botbuilder-dialogs');
+const { MemberProfile } = require('./dialogs/birthday/MemberProfile');
+// const { WelcomeCard } = require('./dialogs/welcome');
+const { BirthdayDialog } = require('./dialogs/birthday/BirthdayDialog');
 
-// Import dialogs
-const { UserProfile } = require('./dialogs/greeting/userProfile');
-const { WelcomeCard } = require('./dialogs/welcome');
-const { GreetingDialog } = require('./dialogs/greeting');
-
-// Greeting Dialog ID
-const GREETING_DIALOG = 'greetingDialog';
-
-// State Accessor Properties
+const BIRTHDAY_DIALOG = 'birthdayDialog';
 const DIALOG_STATE_PROPERTY = 'dialogState';
-const USER_PROFILE_PROPERTY = 'userProfileProperty';
+const MEMBER_PROFILE_PROPERTY = 'memberProfileProperty';
 
 // LUIS service type entry as defined in the .bot file.
 const LUIS_CONFIGURATION = 'lundis-LUIS';
@@ -28,15 +21,14 @@ const ENV_FILE = require('path').join(__dirname, '.env');
 const env = require('dotenv').config({ path: ENV_FILE });
 // Added me alundiak - EXPERIMENTAL - until encryption done.
 
-// Supported LUIS Intents.
-const GREETING_INTENT = 'Greeting';
+const BIRTHDAY_INTENT = 'Birthday';
 const CANCEL_INTENT = 'Cancel';
 const HELP_INTENT = 'Help';
 const NONE_INTENT = 'None';
 
-// Supported LUIS Entities, defined in ./dialogs/greeting/resources/greeting.lu
-const USER_NAME_ENTITIES = ['userName', 'userName_patternAny'];
-const USER_LOCATION_ENTITIES = ['userLocation', 'userLocation_patternAny'];
+// OLD: Supported LUIS Entities, defined in ./dialogs/greeting/resources/greeting.lu
+const MEMBER_NAME_ENTITIES = ['memberName', 'memberName_patternAny'];
+const BIRTHDAY_ENTITIES = ['birthday', 'birthday_patternAny'];
 
 /**
  * Demonstrates the following concepts:
@@ -53,7 +45,7 @@ class BasicBot {
    * 1. StatePropertyAccessor for conversation state
    * 2. StatePropertyAccess for user state
    * 3. LUIS client
-   * 4. DialogSet to handle our GreetingDialog
+   * 4. DialogSet to handle our BirthdayDialog
    *
    * @param {ConversationState} conversationState property accessor
    * @param {UserState} userState property accessor
@@ -66,10 +58,6 @@ class BasicBot {
 
     // Add the LUIS recognizer.
     const luisConfig = botConfig.findServiceByNameOrId(LUIS_CONFIGURATION);
-
-    console.log('\nbot.js => luisConfig', luisConfig);
-
-    // console.log(process.env); // works
 
     // Added me alundiak - EXPERIMENTAL - until encryption done.
     if (!luisConfig.appId){
@@ -99,13 +87,12 @@ class BasicBot {
     });
 
     // Create the property accessors for user and conversation state
-    this.userProfileAccessor = userState.createProperty(USER_PROFILE_PROPERTY);
+    this.memberProfileAccessor = userState.createProperty(MEMBER_PROFILE_PROPERTY);
     this.dialogState = conversationState.createProperty(DIALOG_STATE_PROPERTY);
 
-    // Create top-level dialog(s)
     this.dialogs = new DialogSet(this.dialogState);
-    // Add the Greeting dialog to the set
-    this.dialogs.add(new GreetingDialog(GREETING_DIALOG, this.userProfileAccessor));
+    // Add the Birthday dialog to the set
+    this.dialogs.add(new BirthdayDialog(BIRTHDAY_DIALOG, this.memberProfileAccessor));
 
     this.conversationState = conversationState;
     this.userState = userState;
@@ -135,17 +122,15 @@ class BasicBot {
 
       console.log('\nbot.js onTurn => topIntent =>', topIntent);
 
-      // update user profile property with any entities captured by LUIS
+      // update member profile property with any entities captured by LUIS
       // This could be user responding with their name or city while we are in the middle of greeting dialog,
-      // or user saying something like 'i'm {userName}' while we have no active multi-turn dialog.
-      await this.updateUserProfile(results, context);
+      // or user saying something like 'i'm {memberName}' while we have no active multi-turn dialog.
+      await this.updateMemberProfile(results, context);
 
       // Based on LUIS topIntent, evaluate if we have an interruption.
       // Interruption here refers to user looking for help/ cancel existing dialog
       const interrupted = await this.isTurnInterrupted(dc, results);
       
-      console.log('\nbot.js onTurn => interrupted =>', interrupted);
-
       if (interrupted) {
         if (dc.activeDialog !== undefined) {
           // issue a re-prompt on the active dialog
@@ -156,7 +141,7 @@ class BasicBot {
         dialogResult = await dc.continueDialog();
       }
 
-      console.log('\n bot.js dialogResult => ', dialogResult);
+      console.log('\nbot.js onTurn => dialogResult => ', dialogResult);
 
       // If no active dialog or no active dialog has responded,
       if (!dc.context.responded) {
@@ -166,14 +151,14 @@ class BasicBot {
           case DialogTurnStatus.empty:
             // Determine what we should do based on the top intent from LUIS.
             switch (topIntent) {
-              case GREETING_INTENT:
-                await dc.beginDialog(GREETING_DIALOG);
+              case BIRTHDAY_INTENT:
+                await dc.beginDialog(BIRTHDAY_DIALOG);
                 break;
               case NONE_INTENT:
               default:
                 // None or no intent identified, either way, let's provide some help
                 // to the user
-                await dc.context.sendActivity(`I didn't understand what you just said to me.`);
+                await dc.context.sendActivity(`This is default Bot behavior, sorry. No logic yet.`);
                 break;
             }
             break;
@@ -190,6 +175,7 @@ class BasicBot {
         }
       }
     }
+
     // Handle ConversationUpdate activity type, which is used to indicates new members add to
     // the conversation.
     // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types
@@ -207,8 +193,10 @@ class BasicBot {
             // When activity type is "conversationUpdate" and the member joining the conversation is the bot
             // we will send our Welcome Adaptive Card.  This will only be sent once, when the Bot joins conversation
             // To learn more about Adaptive Cards, see https://aka.ms/msbot-adaptivecards for more details.
-            const welcomeCard = CardFactory.adaptiveCard(WelcomeCard);
-            await context.sendActivity({ attachments: [welcomeCard] });
+            
+            // const welcomeCard = CardFactory.adaptiveCard(WelcomeCard);
+            // await context.sendActivity({ attachments: [welcomeCard] });
+            await context.sendActivity('Welcome aboard :)'); // TODO
           }
         }
       }
@@ -228,14 +216,13 @@ class BasicBot {
    */
   async isTurnInterrupted(dc, luisResults) {
     
-    console.log('\n bot.js dc => ', dc);
-    console.log('\n bot.js luisResults => ', luisResults);
+    console.log('\n bot.js isTurnInterrupted => dc => ', dc);
+    console.log('\n bot.js isTurnInterrupted => luisResults => ', luisResults);
 
     const topIntent = LuisRecognizer.topIntent(luisResults);
 
-    console.log('\nbot.js isTurnInterrupted => topIntent =>', topIntent);
+    console.log('\n bot.js isTurnInterrupted => topIntent =>', topIntent);
 
-    // see if there are anh conversation interrupts we need to handle
     if (topIntent === CANCEL_INTENT) {
       if (dc.activeDialog) {
         // cancel all active dialog (clean the stack)
@@ -255,37 +242,36 @@ class BasicBot {
     return false; // this is not an interruption
   }
 
-  /**
-   * Helper function to update user profile with entities returned by LUIS.
-   *
-   * @param {LuisResults} luisResults - LUIS recognizer results
-   * @param {DialogContext} dc - dialog context
-   */
-  async updateUserProfile(luisResult, context) {
-    // Do we have any entities?
+  async updateMemberProfile(luisResult, context) {
     if (Object.keys(luisResult.entities).length !== 1) {
-      // get userProfile object using the accessor
-      let userProfile = await this.userProfileAccessor.get(context);
-      if (userProfile === undefined) {
-        userProfile = new UserProfile();
+
+      let memberProfile = await this.memberProfileAccessor.get(context);
+      if (memberProfile === undefined) {
+        memberProfile = new MemberProfile();
       }
-      // see if we have any user name entities
-      USER_NAME_ENTITIES.forEach(name => {
+
+      MEMBER_NAME_ENTITIES.forEach(name => {
         if (luisResult.entities[name] !== undefined) {
           let lowerCaseName = luisResult.entities[name][0];
           // capitalize and set user name
-          userProfile.name = lowerCaseName.charAt(0).toUpperCase() + lowerCaseName.substr(1);
+          memberProfile.name = lowerCaseName.charAt(0).toUpperCase() + lowerCaseName.substr(1); // TODO improve "Andrii Lundiak"-kind of name
         }
       });
-      USER_LOCATION_ENTITIES.forEach(city => {
-        if (luisResult.entities[city] !== undefined) {
-          let lowerCaseCity = luisResult.entities[city][0];
+
+      //
+      // TODO birthday / age / access to JSON data of birthdays
+      // Alternative: take info from member, and save to DB.
+      // 
+      BIRTHDAY_ENTITIES.forEach(entityName => {
+        if (luisResult.entities[entityName] !== undefined) {
+          let lowerCaseBirthday = luisResult.entities[entityName][0]; // TODO
           // capitalize and set user name
-          userProfile.city = lowerCaseCity.charAt(0).toUpperCase() + lowerCaseCity.substr(1);
+          // memberProfile.birthday = lowerCaseName.charAt(0).toUpperCase() + lowerCaseName.substr(1);
+          memberProfile.birthday = lowerCaseBirthday
         }
       });
-      // set the new values
-      await this.userProfileAccessor.set(context, userProfile);
+
+      await this.memberProfileAccessor.set(context, memberProfile);
     }
   }
 }
